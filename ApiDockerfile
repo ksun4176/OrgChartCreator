@@ -1,0 +1,14 @@
+FROM node:20-alpine
+
+WORKDIR /app
+
+COPY ./api/package*.json ./
+COPY ./api/tsconfig*.json ./
+
+RUN npm ci
+
+COPY . .
+
+RUN npm run build
+
+CMD [ "node", "dist/main.js" ]
