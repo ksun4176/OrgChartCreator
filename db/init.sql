@@ -1,7 +1,7 @@
 -- Information about your organization
 -- name: name of organization
 CREATE TABLE organization (
-  id SERIAL,
+  id SMALLSERIAL,
   name VARCHAR(255) NOT NULL,
 
   PRIMARY KEY (id)
@@ -10,7 +10,7 @@ CREATE TABLE organization (
 -- Team type used for grouping multiple teams
 -- name: name of team type
 CREATE TABLE team_type (
-  id SERIAL,
+  id SMALLSERIAL,
   name VARCHAR(255) NOT NULL,
 
   PRIMARY KEY (id)
@@ -46,7 +46,7 @@ CREATE TABLE member (
 -- Roles that members can have
 -- name: name of member role type
 CREATE TABLE member_role (
-  id SERIAL,
+  id SMALLSERIAL,
   name VARCHAR(255) NOT NULL,
 
   PRIMARY KEY (id)
@@ -54,6 +54,7 @@ CREATE TABLE member_role (
 INSERT INTO member_role (id, name) VALUES
 (1, 'Manager'),
 (2, 'Member');
+SELECT setval('member_role_id_seq', 2);
 
 -- A member of the team
 -- member_id: Member to link
@@ -81,23 +82,28 @@ ALTER TABLE team_member ADD CONSTRAINT team_member_role_fk FOREIGN KEY (role_id)
 -- Seed test data
 INSERT INTO organization (id, name) VALUES
 (1, 'Mathpix');
+SELECT setval('organization_id_seq', 1);
 
 INSERT INTO team_type (id, name) VALUES
 (1, 'Divisonal'),
 (2, 'Functional');
+SELECT setval('team_type_id_seq', 2);
 
 INSERT INTO team (id, name, org_id, type_id) VALUES
 (1, 'Mathpix D Team 1', 1, 1),
 (2, 'Mathpix D Team 2', 1, 1),
 (3, 'Mathpix F Team 1', 1, 2),
 (4, 'Mathpix F Team 2', 1, 2);
+SELECT setval('team_id_seq', 4);
 
 INSERT INTO member (id, first_name, last_name, email) VALUES
 (1, 'Anne', 'D1Manager', 'd1manager@mathpix.com'),
 (2, 'Fred', 'D1Member1', 'd1member1@mathpix.com'),
 (3, 'David', 'D1Member2', 'd1member2@mathpix.com');
+SELECT setval('member_id_seq', 3);
 
 INSERT INTO team_member (id, member_id, team_id, role_id) VALUES
 (1, 1, 1, 1),
 (2, 2, 1, 2),
 (3, 3, 1, 2);
+SELECT setval('team_member_id_seq', 3);

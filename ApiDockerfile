@@ -7,7 +7,7 @@ COPY ./api/tsconfig*.json ./
 
 RUN npm ci
 
-COPY . .
+COPY ./api .
 
 RUN npm run build
 

@@ -1,14 +1,16 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { UpdateOrganizationDto } from './dto/update-organization.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Organization } from './entities/organization.entity';
 import { Repository } from 'typeorm';
+import { TeamService } from 'src/team/team.service';
 
 @Injectable()
 export class OrganizationService {
   constructor(
     @InjectRepository(Organization)
     private orgRepository: Repository<Organization>,
+    private readonly teamService: TeamService,
   ) {}
 
   /**
@@ -16,21 +18,28 @@ export class OrganizationService {
    * (There should only be one)
    * @returns Organization
    */
-  async findFirst() {
-    const orgs = await this.orgRepository.find();
-    if (orgs.length > 0) {
-      return orgs[0];
-    } else {
-      throw new InternalServerErrorException('No organization set up');
-    }
+  findFirst() {
+    return this.orgRepository.findOneByOrFail({ id: 1 });
+  }
+
+  /**
+   * Find all teams in the organization
+   * @returns Teams
+   */
+  findTeams() {
+    return this.teamService.findMany({ organization: { id: 1 } });
   }
 
   /**
    * Update the organization
-   * @param id Organization to update
    * @param updateOrganizationDto Properties to update
    */
-  update(id: number, updateOrganizationDto: UpdateOrganizationDto) {
-    this.orgRepository.update({ id }, { ...updateOrganizationDto });
+  update(updateOrganizationDto: UpdateOrganizationDto) {
+    this.orgRepository.update(
+      { id: 1 },
+      {
+        name: updateOrganizationDto.name,
+      },
+    );
   }
 }

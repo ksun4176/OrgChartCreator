@@ -1,11 +1,4 @@
-import {
-  Controller,
-  Get,
-  Body,
-  Patch,
-  Param,
-  ParseIntPipe,
-} from '@nestjs/common';
+import { Controller, Get, Body, Patch } from '@nestjs/common';
 import { OrganizationService } from './organization.service';
 import { UpdateOrganizationDto } from './dto/update-organization.dto';
 
@@ -18,11 +11,13 @@ export class OrganizationController {
     return this.organizationService.findFirst();
   }
 
-  @Patch(':id')
-  update(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() updateOrganizationDto: UpdateOrganizationDto,
-  ) {
-    return this.organizationService.update(+id, updateOrganizationDto);
+  @Get('teams')
+  findTeams() {
+    return this.organizationService.findTeams();
+  }
+
+  @Patch()
+  update(@Body() updateOrganizationDto: UpdateOrganizationDto) {
+    return this.organizationService.update(updateOrganizationDto);
   }
 }
