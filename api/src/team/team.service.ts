@@ -1,9 +1,15 @@
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { CreateTeamDto } from './dto/create-team.dto';
 import { UpdateTeamDto } from './dto/update-team.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Team } from './entities/team.entity';
-import { FindOptionsRelations, FindOptionsWhere, Repository } from 'typeorm';
+import {
+  DeepPartial,
+  FindOptionsRelations,
+  FindOptionsWhere,
+  Repository,
+} from 'typeorm';
+import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 
 @Injectable()
 export class TeamService {
@@ -17,6 +23,7 @@ export class TeamService {
    */
   private findRelations: FindOptionsRelations<Team> = {
     type: true,
+    children: true,
   };
 
   /**
@@ -25,11 +32,14 @@ export class TeamService {
    * @returns Created team
    */
   create(createTeamDto: CreateTeamDto) {
-    const newTeam = this.teamRepository.create({
+    const teamProps: DeepPartial<Team> = {
       name: createTeamDto.name,
-      organization: { id: 1 },
       type: { id: createTeamDto.type },
-    });
+    };
+    if (createTeamDto.parent) {
+      teamProps.parent = { id: createTeamDto.parent };
+    }
+    const newTeam = this.teamRepository.create(teamProps);
     return this.teamRepository.save(newTeam);
   }
 
@@ -38,7 +48,7 @@ export class TeamService {
    * @param criteria Criteria to find teams with
    * @returns A list of teams
    */
-  findMany(criteria: FindOptionsWhere<Team>) {
+  findMany(criteria?: FindOptionsWhere<Team>) {
     return this.teamRepository.find({
       where: criteria,
       relations: this.findRelations,
@@ -64,13 +74,14 @@ export class TeamService {
    * @returns UpdateResult
    */
   update(id: number, updateTeamDto: UpdateTeamDto) {
-    return this.teamRepository.update(
-      { id },
-      {
-        name: updateTeamDto.name,
-        type: { id: updateTeamDto.type },
-      },
-    );
+    const teamProps: QueryDeepPartialEntity<Team> = {
+      name: updateTeamDto.name,
+      type: { id: updateTeamDto.type },
+    };
+    if (updateTeamDto.parent) {
+      teamProps.parent = { id: updateTeamDto.parent };
+    }
+    return this.teamRepository.update({ id }, teamProps);
   }
 
   /**
@@ -78,7 +89,11 @@ export class TeamService {
    * @param id ID of team
    * @returns DeleteResult
    */
-  remove(id: number) {
+  async remove(id: number) {
+    const children = await this.findMany({ parent: { id } });
+    if (children.length > 0) {
+      return new ForbiddenException('Cannot delete teams that have children');
+    }
     return this.teamRepository.delete({ id });
   }
 }

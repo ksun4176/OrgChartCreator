@@ -1,10 +1,10 @@
-import { Organization } from 'src/organization/entities/organization.entity';
 import {
   Entity,
   Column,
   PrimaryGeneratedColumn,
   ManyToOne,
   JoinColumn,
+  OneToMany,
 } from 'typeorm';
 import { TeamType } from './teamtype.entity';
 
@@ -16,11 +16,15 @@ export class Team {
   @Column()
   name: string;
 
-  @ManyToOne(() => Organization, (org) => org.id)
-  @JoinColumn({ name: 'org_id' })
-  organization: Organization;
-
   @ManyToOne(() => TeamType, (type) => type.id)
   @JoinColumn({ name: 'type_id' })
   type: TeamType;
+
+  @ManyToOne(() => Team, (team) => team.id)
+  @JoinColumn({ name: 'parent_team_id' })
+  parent: Team;
+
+  @OneToMany(() => Team, (team) => team.parent)
+  @JoinColumn({ name: 'parent_team_id' })
+  children: Team[];
 }

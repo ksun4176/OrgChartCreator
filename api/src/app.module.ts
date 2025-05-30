@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Organization } from './organization/entities/organization.entity';
-import { OrganizationModule } from './organization/organization.module';
-import { Team } from './team/entities/team.entity';
 import { TeamType } from './team/entities/teamtype.entity';
+import { TeamMember } from './team/entities/teammember.entity';
 import { TeamModule } from './team/team.module';
+import { MemberRole } from './member/entities/memberrole.entity';
+import { MemberModule } from './member/member.module';
 
 @Module({
   imports: [
@@ -15,11 +15,11 @@ import { TeamModule } from './team/team.module';
       password: 'postgres',
       username: 'postgres',
       database: 'postgres',
-      entities: [TeamType],
+      entities: [TeamType, TeamMember, MemberRole],
       autoLoadEntities: true,
     }),
-    OrganizationModule,
     TeamModule,
+    MemberModule,
   ],
   controllers: [],
   providers: [],
