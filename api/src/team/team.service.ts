@@ -28,6 +28,7 @@ export class TeamService {
    */
   private findRelations: FindOptionsRelations<Team> = {
     type: true,
+    parent: true,
     children: true,
     members: {
       member: true,
