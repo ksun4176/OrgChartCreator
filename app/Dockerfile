@@ -8,7 +8,7 @@ RUN npm ci
 
 COPY ./src ./src
 COPY ./public ./public
-COPY ./next.config.js .
+COPY ./next.config.ts .
 COPY ./tsconfig*.json ./
 
 RUN npm run build
