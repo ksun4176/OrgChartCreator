@@ -112,15 +112,18 @@ export class TeamService {
    * @param createTeamAssignmentDto Properties to assign a member to a team
    * @returns Created assignment
    */
-  assignMember(teamId: number, createTeamAssignmentDto: CreateTeamAssignmentDto) {
+  assignMember(
+    teamId: number,
+    createTeamAssignmentDto: CreateTeamAssignmentDto,
+  ) {
     const newAssignment = this.teamMemberRepository.create({
       member: { id: createTeamAssignmentDto.member },
       team: { id: teamId },
-      role: { id: createTeamAssignmentDto.role }
+      role: { id: createTeamAssignmentDto.role },
     });
     return this.teamMemberRepository.save(newAssignment);
   }
-  
+
   /**
    * Update the team
    * @param teamId ID of team
@@ -128,15 +131,19 @@ export class TeamService {
    * @param updateTeamAssignmentDto Properties to update
    * @returns UpdateResult
    */
-  updateAssignment(teamId: number, memberId: number, updateTeamAssignmentDto: UpdateTeamAssignmentDto) {
+  updateAssignment(
+    teamId: number,
+    memberId: number,
+    updateTeamAssignmentDto: UpdateTeamAssignmentDto,
+  ) {
     return this.teamMemberRepository.update(
       {
         team: { id: teamId },
-        member: { id: memberId }
+        member: { id: memberId },
       },
       {
-        role: { id: updateTeamAssignmentDto.role }
-      }
+        role: { id: updateTeamAssignmentDto.role },
+      },
     );
   }
 
@@ -146,10 +153,10 @@ export class TeamService {
    * @param memberId ID of member
    * @returns DeleteResult
    */
-  removeAssignment(teamId: number, memberId: number,) {
+  removeAssignment(teamId: number, memberId: number) {
     return this.teamMemberRepository.delete({
       team: { id: teamId },
-      member: { id: memberId }
+      member: { id: memberId },
     });
   }
 }

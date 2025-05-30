@@ -11,10 +11,10 @@ services:
       - pgdata:/var/lib/postgresql/data
       - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
 
-  app:
+  api:
     build:
-      context: .
-      dockerfile: ApiDockerfile
+      context: ./api
+      dockerfile: Dockerfile
     environment:
       - PORT=9000
     ports:
@@ -22,7 +22,20 @@ services:
     depends_on:
       - db
     volumes:
-      - ./src:/app/src
+      - ./src:/api/src
+
+  app:
+    restart: always
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    ports:
+      - 3000:3000
+    depends_on:
+      - api
+    volumes:
+      - ./app/src:/app/src
+      - ./app/public:/app/public
 
   pgadmin:
     image: dpage/pgadmin4

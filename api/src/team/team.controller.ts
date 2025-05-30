@@ -34,7 +34,10 @@ export class TeamController {
   }
 
   @Patch(':id')
-  update(@Param('id', ParseIntPipe) id: number, @Body() updateTeamDto: UpdateTeamDto) {
+  update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateTeamDto: UpdateTeamDto,
+  ) {
     return this.teamService.update(id, updateTeamDto);
   }
 
@@ -42,19 +45,33 @@ export class TeamController {
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.teamService.remove(id);
   }
-  
+
   @Post(':id/members')
-  assignMember(@Param('id', ParseIntPipe) id: number, @Body() createTeamAssignmentDto: CreateTeamAssignmentDto) {
+  assignMember(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() createTeamAssignmentDto: CreateTeamAssignmentDto,
+  ) {
     return this.teamService.assignMember(id, createTeamAssignmentDto);
   }
-  
+
   @Patch(':id/members/:memberId')
-  updateMember(@Param('id', ParseIntPipe) id: number, @Param('memberId', ParseIntPipe) memberId: number, @Body() updateTeamAssignmentDto: UpdateTeamAssignmentDto) {
-    return this.teamService.updateAssignment(id, memberId, updateTeamAssignmentDto);
+  updateMember(
+    @Param('id', ParseIntPipe) id: number,
+    @Param('memberId', ParseIntPipe) memberId: number,
+    @Body() updateTeamAssignmentDto: UpdateTeamAssignmentDto,
+  ) {
+    return this.teamService.updateAssignment(
+      id,
+      memberId,
+      updateTeamAssignmentDto,
+    );
   }
 
   @Delete(':id/members/:memberId')
-  deleteMember(@Param('id', ParseIntPipe) id: number, @Param('memberId', ParseIntPipe) memberId: number) {
+  deleteMember(
+    @Param('id', ParseIntPipe) id: number,
+    @Param('memberId', ParseIntPipe) memberId: number,
+  ) {
     return this.teamService.removeAssignment(id, memberId);
   }
 }

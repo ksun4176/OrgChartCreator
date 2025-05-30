@@ -32,7 +32,10 @@ export class MemberController {
   }
 
   @Patch(':id')
-  update(@Param('id', ParseIntPipe) id: number, @Body() updateMemberDto: UpdateMemberDto) {
+  update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateMemberDto: UpdateMemberDto,
+  ) {
     return this.memberService.update(id, updateMemberDto);
   }
 
