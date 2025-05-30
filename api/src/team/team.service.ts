@@ -1,8 +1,11 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import { CreateTeamDto } from './dto/create-team.dto';
 import { UpdateTeamDto } from './dto/update-team.dto';
-import { InjectRepository } from '@nestjs/typeorm';
+import { CreateTeamAssignmentDto } from './dto/create-team-assignment.dto';
+import { UpdateTeamAssignmentDto } from './dto/update-team-assignment.dto';
 import { Team } from './entities/team.entity';
+import { TeamMember } from './entities/teammember.entity';
 import {
   DeepPartial,
   FindOptionsRelations,
@@ -16,6 +19,8 @@ export class TeamService {
   constructor(
     @InjectRepository(Team)
     private teamRepository: Repository<Team>,
+    @InjectRepository(TeamMember)
+    private teamMemberRepository: Repository<TeamMember>,
   ) {}
 
   /**
@@ -24,6 +29,10 @@ export class TeamService {
   private findRelations: FindOptionsRelations<Team> = {
     type: true,
     children: true,
+    members: {
+      member: true,
+      role: true,
+    },
   };
 
   /**
@@ -95,5 +104,52 @@ export class TeamService {
       return new ForbiddenException('Cannot delete teams that have children');
     }
     return this.teamRepository.delete({ id });
+  }
+
+  /**
+   * Assign a member to a team
+   * @param teamId ID of team
+   * @param createTeamAssignmentDto Properties to assign a member to a team
+   * @returns Created assignment
+   */
+  assignMember(teamId: number, createTeamAssignmentDto: CreateTeamAssignmentDto) {
+    const newAssignment = this.teamMemberRepository.create({
+      member: { id: createTeamAssignmentDto.member },
+      team: { id: teamId },
+      role: { id: createTeamAssignmentDto.role }
+    });
+    return this.teamMemberRepository.save(newAssignment);
+  }
+  
+  /**
+   * Update the team
+   * @param teamId ID of team
+   * @param memberId ID of member
+   * @param updateTeamAssignmentDto Properties to update
+   * @returns UpdateResult
+   */
+  updateAssignment(teamId: number, memberId: number, updateTeamAssignmentDto: UpdateTeamAssignmentDto) {
+    return this.teamMemberRepository.update(
+      {
+        team: { id: teamId },
+        member: { id: memberId }
+      },
+      {
+        role: { id: updateTeamAssignmentDto.role }
+      }
+    );
+  }
+
+  /**
+   * Delete the team
+   * @param teamId ID of team
+   * @param memberId ID of member
+   * @returns DeleteResult
+   */
+  removeAssignment(teamId: number, memberId: number,) {
+    return this.teamMemberRepository.delete({
+      team: { id: teamId },
+      member: { id: memberId }
+    });
   }
 }

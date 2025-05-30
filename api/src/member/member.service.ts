@@ -3,7 +3,7 @@ import { CreateMemberDto } from './dto/create-member.dto';
 import { UpdateMemberDto } from './dto/update-member.dto';
 import { Member } from './entities/member.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindOptionsWhere, Repository } from 'typeorm';
+import { FindOptionsRelations, FindOptionsWhere, Repository } from 'typeorm';
 
 @Injectable()
 export class MemberService {
@@ -11,6 +11,16 @@ export class MemberService {
     @InjectRepository(Member)
     private memberRepository: Repository<Member>,
   ) {}
+
+  /**
+   * Which relations to include with find queries
+   */
+  private findRelations: FindOptionsRelations<Member> = {
+    teams: {
+      team: true,
+      role: true,
+    },
+  };
 
   /**
    * Create a member
@@ -34,6 +44,7 @@ export class MemberService {
   findMany(criteria?: FindOptionsWhere<Member>) {
     return this.memberRepository.find({
       where: criteria,
+      relations: this.findRelations,
     });
   }
 
@@ -45,6 +56,7 @@ export class MemberService {
   findOne(id: number) {
     return this.memberRepository.findOne({
       where: { id },
+      relations: this.findRelations,
     });
   }
 

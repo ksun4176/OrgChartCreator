@@ -7,6 +7,7 @@ import {
   OneToMany,
 } from 'typeorm';
 import { TeamType } from './teamtype.entity';
+import { TeamMember } from './teammember.entity';
 
 @Entity()
 export class Team {
@@ -27,4 +28,8 @@ export class Team {
   @OneToMany(() => Team, (team) => team.parent)
   @JoinColumn({ name: 'parent_team_id' })
   children: Team[];
+
+  @OneToMany(() => TeamMember, (teamMember) => teamMember.team)
+  @JoinColumn({ name: 'team_id' })
+  members: TeamMember;
 }

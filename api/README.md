@@ -42,6 +42,24 @@ PATCH: Update a team
 - type
 - parent
 
+### `/teams/:id/members`
+Params:
+- id: ID of team
+
+POST: Assign a member to a team
+- member
+- role
+
+### `teams/:id/members/:memberId`
+Params:
+- id: ID of team
+- memberId: ID of member
+
+DELETE: Delete a team assignment
+
+PATCH: Update a team assignment
+- role
+
 ### `/members`
 GET: Get all members
 
