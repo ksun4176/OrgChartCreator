@@ -3,6 +3,7 @@ export type Member = {
   firstName: string
   lastName: string
   email: string
+  teams: TeamMember[]
 }
 
 export type MemberRole = {
@@ -18,6 +19,7 @@ export type TeamType = {
 export type TeamMember = {
   id: number
   member: Member
+  team: Team
   role: MemberRole
 }
 
@@ -28,4 +30,21 @@ export type Team = {
   parent?: Team
   children: Team[]
   members: TeamMember[]
+}
+
+export type GetTeamsObj = {
+  id: number
+  name: string
+  type: TeamType
+  parent?: Team
+  children: number[]
+  members: number[]
+};
+
+export type GetMembersObj = {
+  id: number
+  firstName: string
+  lastName: string
+  email: string
+  teams: number[]
 }

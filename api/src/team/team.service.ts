@@ -6,12 +6,7 @@ import { CreateTeamAssignmentDto } from './dto/create-team-assignment.dto';
 import { UpdateTeamAssignmentDto } from './dto/update-team-assignment.dto';
 import { Team } from './entities/team.entity';
 import { TeamMember } from './entities/teammember.entity';
-import {
-  DeepPartial,
-  FindOptionsRelations,
-  FindOptionsWhere,
-  Repository,
-} from 'typeorm';
+import { DeepPartial, FindOptionsWhere, Repository } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 
 @Injectable()
@@ -22,19 +17,6 @@ export class TeamService {
     @InjectRepository(TeamMember)
     private teamMemberRepository: Repository<TeamMember>,
   ) {}
-
-  /**
-   * Which relations to include with find queries
-   */
-  private findRelations: FindOptionsRelations<Team> = {
-    type: true,
-    parent: true,
-    children: true,
-    members: {
-      member: true,
-      role: true,
-    },
-  };
 
   /**
    * Create a team in the organization
@@ -61,7 +43,13 @@ export class TeamService {
   findMany(criteria?: FindOptionsWhere<Team>) {
     return this.teamRepository.find({
       where: criteria,
-      relations: this.findRelations,
+      relations: {
+        type: true,
+        parent: true,
+      },
+      loadRelationIds: {
+        relations: ['children', 'members'],
+      },
     });
   }
 
@@ -73,7 +61,16 @@ export class TeamService {
   findOne(id: number) {
     return this.teamRepository.findOne({
       where: { id },
-      relations: this.findRelations,
+      relations: {
+        type: true,
+        parent: true,
+        children: true,
+        members: {
+          member: true,
+          team: true,
+          role: true,
+        },
+      },
     });
   }
 

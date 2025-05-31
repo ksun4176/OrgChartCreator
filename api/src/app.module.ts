@@ -10,7 +10,7 @@ import { MemberModule } from './member/member.module';
   imports: [
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: 'db',
+      host: 'localhost',
       port: 5432,
       password: 'postgres',
       username: 'postgres',

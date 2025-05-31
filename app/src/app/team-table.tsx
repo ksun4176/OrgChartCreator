@@ -1,24 +1,18 @@
 "use client"
 
 import { useFetchTeams } from "@/lib/hooks/useFetchTeams";
-import { teamTableColumns } from "./columns";
 import { getCoreRowModel, useReactTable } from "@tanstack/react-table"
-import { useState } from "react";
-import { DataTable } from "../data-table";
+import { teamsColumns } from "./columns";
+import { DataTable } from "@/components/data-table";
 
 export function TeamTable() {
   const { teams, teamsLoading } = useFetchTeams();
-  const [rowSelection, setRowSelection] = useState({})
 
   const table = useReactTable({
     data: teams,
-    columns: teamTableColumns,
+    columns: teamsColumns,
     getCoreRowModel: getCoreRowModel(),
-    onRowSelectionChange: setRowSelection,
-    state: {
-      rowSelection,
-    },
-  })
+  });
 
   if (teamsLoading) {
     return <div>Loading...</div>

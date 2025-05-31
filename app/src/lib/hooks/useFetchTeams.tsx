@@ -1,17 +1,19 @@
+"use client"
+
 import { useEffect, useState } from "react";
 import { getTeams } from "../apis";
-import { Team } from "../types";
+import { GetTeamsObj } from "../types";
 
 /**
  * Fetch teams
  */
 export function useFetchTeams() {
-  const [teams, setTeams] = useState<Team[]>([]);
+  const [teams, setTeams] = useState<GetTeamsObj[]>([]);
   const [teamsError, setError] = useState();
   const [teamsLoading, setLoading] = useState(true);
   useEffect(() => {
     async function startFetching() {
-      let response = await getTeams();
+      const response = await getTeams();
       const teams = response.data;
 
       if (!ignore) {

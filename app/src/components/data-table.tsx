@@ -46,8 +46,6 @@ export function DataTable<TData>(props: DataTableProps<TData>) {
                 key={row.id}
                 data-state={row.getIsSelected() && "selected"}
                 onPointerDown={() => {
-                  table.setRowSelection({});
-                  row.toggleSelected(true);
                 }}
               >
                 {row.getVisibleCells().map((cell) => (
