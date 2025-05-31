@@ -38,19 +38,20 @@ export function TeamTableButton(props: TeamTableButtonProps) {
   })
  
   async function onSubmit(values: z.infer<typeof teamSchema>) {
-    try {
-      await postTeam({
-        name: values.name,
-        type: values.type,
-        parent: values.parent
-      });
-      setError('');
+    const response = await postTeam({
+      name: values.name,
+      type: values.type,
+      parent: values.parent
+    });
+    let errorMessage = '';
+    if (response.success) {
       setOpen(false);
       if (setNumAdded) setNumAdded(old => old+1);
     }
-    catch {
-      setError('Could not create team. Try again later.');
+    else {
+      errorMessage = response.message ?? 'Could not create team. Try again later.';
     }
+    setError(errorMessage);
   }
 
   return (

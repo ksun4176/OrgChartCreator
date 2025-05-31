@@ -1,5 +1,10 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { GetMembersObj, GetTeamsObj, Member, PostMembersObj, PostTeamsObj, Team, TeamType } from "./types";
+
+export type PostApiResponse = {
+  success: boolean
+  message?: string
+}
 
 const apiUrl = 'http://localhost:9000';
 
@@ -37,15 +42,38 @@ export const getMember = (memberId: number) => axios.get<Member>(`${apiUrl}/memb
  * @param team Team to create
  * @returns Created team
  */
-export const postTeam = (team: PostTeamsObj) => axios.post<Team>(`${apiUrl}/teams`, {
-  ...team
-});
+export const postTeam = (team: PostTeamsObj): Promise<PostApiResponse> => axios.post<Team>(`${apiUrl}/teams`, {...team})
+  .then(() => {
+    return {
+      success: true,
+      message: 'Team created.'
+    }
+  })
+  .catch(() => {
+    return {
+      success: false,
+    }
+  });
 
 /**
  * Create a team
  * @param team Team to create
  * @returns Created team
  */
-export const postMember = (member: PostMembersObj) => axios.post<Team>(`${apiUrl}/members`, {
-  ...member
-});
+export const postMember = (member: PostMembersObj): Promise<PostApiResponse> => axios.post<Team>(`${apiUrl}/members`, {...member})
+  .then(() => {
+    return {
+      success: true,
+      message: 'Member created.'
+    }
+  })
+  .catch((error: AxiosError<Error>) => {
+    let errorMessage = undefined;
+    if (error.status === 409 && error.response?.data.message) {
+      errorMessage = error.response.data.message;
+    }
+    return {
+      success: false,
+      message: errorMessage
+    }
+  });

@@ -10,7 +10,6 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { postMember } from "@/lib/apis";
-import { AxiosError } from "axios";
 
 const memberSchema = z.object({
   firstName: z.string().min(1, { message: 'Enter first name' }),
@@ -36,25 +35,20 @@ export function MemberTableButton(props: MemberTableButtonProps) {
   })
 
   async function onSubmit(values: z.infer<typeof memberSchema>) {
-    try {
-      await postMember({
-        firstName: values.firstName,
-        lastName: values.lastName,
-        email: values.email
-      });
-      setError('');
+    const response = await postMember({
+      firstName: values.firstName,
+      lastName: values.lastName,
+      email: values.email
+    });
+    let errorMessage = '';
+    if (response.success) {
       setOpen(false);
       if (setNumAdded) setNumAdded(old => old+1);
     }
-    catch (error) {
-      const axiosError = error as AxiosError<Error>;
-      let errorMessage = 'Could not create member. Try again later.'
-      console.log(axiosError.status);
-      if (axiosError.status === 409 && axiosError.response?.data.message) {
-        errorMessage = axiosError.response.data.message;
-      }
-      setError(errorMessage);
+    else {
+      errorMessage = response.message ??'Could not create member. Try again later.';
     }
+    setError(errorMessage);
   }
 
   return (
