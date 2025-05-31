@@ -1,9 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { CreateMemberDto } from './dto/create-member.dto';
 import { UpdateMemberDto } from './dto/update-member.dto';
 import { Member } from './entities/member.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindOptionsWhere, Repository } from 'typeorm';
+import { FindOptionsWhere, QueryFailedError, Repository } from 'typeorm';
 
 @Injectable()
 export class MemberService {
@@ -17,13 +17,22 @@ export class MemberService {
    * @param createMemberDto Properties to create member with
    * @returns Created member
    */
-  create(createMemberDto: CreateMemberDto) {
+  async create(createMemberDto: CreateMemberDto) {
     const newMember = this.memberRepository.create({
       firstName: createMemberDto.firstName,
       lastName: createMemberDto.lastName,
-      email: createMemberDto.email,
+      email: createMemberDto.email.toLowerCase(),
     });
-    return this.memberRepository.save(newMember);
+    try {
+      return await this.memberRepository.save(newMember);
+    }
+    catch (error) {
+      const queryError = error as QueryFailedError;
+      if (queryError.message.match(/duplicate key value.*email/)) {
+        throw new ConflictException('Email already in use');
+      }
+      throw error;
+    }
   }
 
   /**

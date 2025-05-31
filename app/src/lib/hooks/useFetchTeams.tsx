@@ -6,8 +6,9 @@ import { GetTeamsObj } from "../types";
 
 /**
  * Fetch teams
+ * @param numAdded Counter if teams have been added
  */
-export function useFetchTeams() {
+export function useFetchTeams(numAdded?: number) {
   const [teams, setTeams] = useState<GetTeamsObj[]>([]);
   const [teamsError, setError] = useState();
   const [teamsLoading, setLoading] = useState(true);
@@ -35,7 +36,7 @@ export function useFetchTeams() {
     return () => {
       ignore = true;
     };
-  }, []);
+  }, [numAdded]);
 
   return { teams, teamsError, teamsLoading };
 }

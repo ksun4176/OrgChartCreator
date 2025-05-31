@@ -41,6 +41,12 @@ export type GetTeamsObj = {
   members: number[]
 };
 
+export type PostTeamsObj = {
+  name: string
+  type: number
+  parent?: number
+};
+
 export type GetMembersObj = {
   id: number
   firstName: string
@@ -48,3 +54,9 @@ export type GetMembersObj = {
   email: string
   teams: number[]
 }
+
+export type PostMembersObj = {
+  firstName: string
+  lastName: string
+  email: string
+};

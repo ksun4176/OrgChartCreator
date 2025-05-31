@@ -2,18 +2,63 @@
 
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
+import z from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { postMember } from "@/lib/apis";
+import { AxiosError } from "axios";
 
-export function MemberTableButton() {
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [email, setEmail] = useState('');
+const memberSchema = z.object({
+  firstName: z.string().min(1, { message: 'Enter first name' }),
+  lastName: z.string().min(1, { message: 'Enter last name' }),
+  email: z.string().email(),
+})
+
+interface MemberTableButtonProps {
+  setNumAdded?: Dispatch<SetStateAction<number>>;
+}
+export function MemberTableButton(props: MemberTableButtonProps) {
+  const { setNumAdded } = props;
+  const [open, setOpen] = useState(false);
+  const [error, setError] = useState('');
+
+  const form = useForm<z.infer<typeof memberSchema>>({
+    resolver: zodResolver(memberSchema),
+    defaultValues: {
+      firstName: '',
+      lastName: '',
+      email: '',
+    }
+  })
+
+  async function onSubmit(values: z.infer<typeof memberSchema>) {
+    try {
+      await postMember({
+        firstName: values.firstName,
+        lastName: values.lastName,
+        email: values.email
+      });
+      setError('');
+      setOpen(false);
+      if (setNumAdded) setNumAdded(old => old+1);
+    }
+    catch (error) {
+      const axiosError = error as AxiosError<Error>;
+      let errorMessage = 'Could not create member. Try again later.'
+      console.log(axiosError.status);
+      if (axiosError.status === 409 && axiosError.response?.data.message) {
+        errorMessage = axiosError.response.data.message;
+      }
+      setError(errorMessage);
+    }
+  }
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button>
           <Plus color="green" /> New Member
@@ -24,43 +69,53 @@ export function MemberTableButton() {
           <DialogTitle>Add a New Member</DialogTitle>
           <DialogDescription>Add the new hire to the system so you can add them into teams.</DialogDescription>
         </DialogHeader>
-        <div className="grid gap-4">
-          <div className="grid gap-3">
-            <Label htmlFor="member-firstname">First Name</Label>
-            <Input
-              id="member-firstname"
-              name="firstname"
-              value={firstName}
-              onChange={e => setFirstName(e.target.value)}
+        {error.length > 0 && <p className="text-destructive text-sm">{error}</p>}
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            <FormField
+              control={form.control}
+              name="firstName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>First Name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="First Name" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-          </div>
-          <div className="grid gap-3">
-            <Label htmlFor="member-lastname">Last Name</Label>
-            <Input
-              id="member-lastname"
-              name="lastname"
-              value={lastName}
-              onChange={e => setLastName(e.target.value)}
+            <FormField
+              control={form.control}
+              name="lastName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Last Name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Last Name" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-          </div>
-          <div className="grid gap-3">
-            <Label htmlFor="member-email">Email</Label>
-            <Input
-              id="member-email"
+            <FormField
+              control={form.control}
               name="email"
-              value={email}
-              onChange={e => setEmail(e.target.value)}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Email" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-          </div>
-        </div>
-        <DialogFooter>
-          <DialogClose asChild>
-            <Button variant="secondary">Cancel</Button>
-          </DialogClose>
-          <DialogClose asChild>
-            <Button>Create</Button>
-          </DialogClose>
-        </DialogFooter>
+            <DialogFooter>
+              <Button type="submit">Create Member</Button>
+            </DialogFooter>
+          </form>
+        </Form>
       </DialogContent>
     </Dialog>
   )

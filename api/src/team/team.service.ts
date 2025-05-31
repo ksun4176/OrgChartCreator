@@ -8,6 +8,7 @@ import { Team } from './entities/team.entity';
 import { TeamMember } from './entities/teammember.entity';
 import { DeepPartial, FindOptionsWhere, Repository } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
+import { TeamType } from './entities/teamtype.entity';
 
 @Injectable()
 export class TeamService {
@@ -16,6 +17,8 @@ export class TeamService {
     private teamRepository: Repository<Team>,
     @InjectRepository(TeamMember)
     private teamMemberRepository: Repository<TeamMember>,
+    @InjectRepository(TeamType)
+    private teamTypeRepository: Repository<TeamType>,
   ) {}
 
   /**
@@ -156,5 +159,13 @@ export class TeamService {
       team: { id: teamId },
       member: { id: memberId },
     });
+  }
+
+  /**
+   * Find team types
+   * @returns A list of team types
+   */
+  findAllTypes() {
+    return this.teamTypeRepository.find();
   }
 }

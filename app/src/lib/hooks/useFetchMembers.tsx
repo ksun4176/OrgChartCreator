@@ -7,8 +7,9 @@ import { GetMembersObj } from "../types";
 
 /**
  * Fetch members
+ * @param numAdded Counter if members have been added
  */
-export function useFetchMembers() {
+export function useFetchMembers(numAdded?: number) {
   const [members, setMembers] = useState<GetMembersObj[]>([]);
   const [membersError, setError] = useState();
   const [membersLoading, setLoading] = useState(true);
@@ -36,7 +37,7 @@ export function useFetchMembers() {
     return () => {
       ignore = true;
     };
-  }, []);
+  }, [numAdded]);
 
   return { members, membersError, membersLoading };
 }
