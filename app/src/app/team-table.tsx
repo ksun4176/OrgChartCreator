@@ -4,6 +4,7 @@ import { useFetchTeams } from "@/lib/hooks/useFetchTeams";
 import { getCoreRowModel, useReactTable } from "@tanstack/react-table"
 import { teamsColumns } from "./columns";
 import { DataTable } from "@/components/data-table";
+import { TeamTableButton } from "./team-table-button";
 
 export function TeamTable() {
   const { teams, teamsLoading } = useFetchTeams();
@@ -19,10 +20,11 @@ export function TeamTable() {
   }
 
   return (
-    <div>
-      <h2 className="text-xl font-semibold tracking-tight text-balance">
-        Teams
-      </h2>
+    <div className="flex flex-col gap-1">
+      <div className="flex">
+        <div className="flex-1" />
+        <TeamTableButton teams={teams} />
+      </div>
       <DataTable table={table} />
     </div>
   )

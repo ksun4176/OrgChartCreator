@@ -4,6 +4,7 @@ import { membersColumns } from "./columns";
 import { getCoreRowModel, useReactTable } from "@tanstack/react-table"
 import { useFetchMembers } from "@/lib/hooks/useFetchMembers";
 import { DataTable } from "@/components/data-table";
+import { MemberTableButton } from "./member-table-button";
 
 export function MemberTable() {
   const { members, membersLoading } = useFetchMembers();
@@ -19,10 +20,11 @@ export function MemberTable() {
   }
 
   return (
-    <div>
-      <h2 className="text-xl font-semibold tracking-tight text-balance">
-        Members
-      </h2>
+    <div className="flex flex-col gap-1">
+      <div className="flex">
+        <div className="flex-1" />
+        <MemberTableButton />
+      </div>
       <DataTable table={table} />
     </div>
   )
