@@ -3,7 +3,9 @@
 import { Separator } from "@/components/ui/separator";
 import { Team } from "@/lib/types";
 import { AddMemberButton } from "./add-member-button";
-import { RemoveMemberButton } from "./remove-member-button";
+import { RemoveAssignmentButton } from "../../../components/remove-assignment-button";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 interface MemberListProps {
   team: Team;
@@ -21,9 +23,11 @@ export function MemberList(props: MemberListProps) {
         {team.members.map((member, index) => (
           <div key={member.id} className="flex flex-col gap-2">
             <div className="flex gap-4 items-center">
-              <div className="font-semibold">{member.member.firstName} {member.member.lastName}</div>
+              <Button variant="link" className="text-link font-semibold p-0 h-auto text-base">
+                <Link href={`/members/${member.member.id}`}>{member.member.firstName} {member.member.lastName}</Link> 
+              </Button>
               <div className="flex-1">{member.role.name}</div>
-              <RemoveMemberButton assignment={member} />
+              <RemoveAssignmentButton assignment={member} />
             </div>
             {index < team.members.length - 1 && <Separator className="pt-1" />}
           </div>

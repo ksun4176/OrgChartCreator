@@ -7,10 +7,10 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { useState } from "react";
 import { removeAssignment } from "@/lib/apis";
 
-interface RemoveMemberButtonProps {
+interface RemoveAssignmentButtonProps {
   assignment: TeamMember;
 }
-export function RemoveMemberButton(props: RemoveMemberButtonProps) {
+export function RemoveAssignmentButton(props: RemoveAssignmentButtonProps) {
   const { assignment } = props;
   const [open, setOpen] = useState(false);
 

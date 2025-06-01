@@ -33,7 +33,7 @@ export function TeamTable() {
         <div className="flex-1" />
         <TeamTableButton teams={teams} setNumAdded={setNumAdded} />
       </div>
-      <DataTable table={table} onRowClicked={onRowClicked}/>
+      <DataTable table={table} onRowClicked={onRowClicked} />
     </div>
   )
 }

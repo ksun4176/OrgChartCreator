@@ -119,6 +119,26 @@ export const updateTeam = (teamId: number, team: Partial<PostTeamsObj>): Promise
     }
   });
   
+
+/**
+ * Update a member
+ * @param memberId Member to update
+ * @param member Properties to update
+ * @returns Success or failure
+ */
+export const updateMember = (memberId: number, member: Partial<PostMembersObj>): Promise<ApiResponse> => axios.patch(`${apiUrl}/members/${memberId}`, {...member})
+  .then(() => {
+    return {
+      success: true,
+      message: 'Member updated.'
+    }
+  })
+  .catch(() => {
+    return {
+      success: false,
+    }
+  });
+
 /**
  * Remove a member to a team
  * @param assignment Assignment to remove
