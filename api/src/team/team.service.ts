@@ -86,10 +86,14 @@ export class TeamService {
   update(id: number, updateTeamDto: UpdateTeamDto) {
     const teamProps: QueryDeepPartialEntity<Team> = {
       name: updateTeamDto.name,
-      type: { id: updateTeamDto.type },
     };
+    if (updateTeamDto.type) {
+      teamProps.type = { id: updateTeamDto.type };
+    }
     if (updateTeamDto.parent) {
       teamProps.parent = { id: updateTeamDto.parent };
+    } else if (updateTeamDto.parent === null) {
+      teamProps.parent = null;
     }
     return this.teamRepository.update({ id }, teamProps);
   }

@@ -6,16 +6,22 @@ import { teamsColumns } from "./columns";
 import { DataTable } from "@/components/data-table";
 import { TeamTableButton } from "./team-table-button";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export function TeamTable() {
   const [numAdded, setNumAdded] = useState(0);
   const { teams, teamsLoading } = useFetchTeams(numAdded);
+  const router = useRouter();
 
   const table = useReactTable({
     data: teams,
     columns: teamsColumns,
     getCoreRowModel: getCoreRowModel(),
   });
+
+  const onRowClicked = (rowId: string) => {
+    router.push(`/teams/${table.getRow(rowId).original.id}`);
+  }
 
   if (teamsLoading) {
     return <div>Loading...</div>
@@ -27,7 +33,7 @@ export function TeamTable() {
         <div className="flex-1" />
         <TeamTableButton teams={teams} setNumAdded={setNumAdded} />
       </div>
-      <DataTable table={table} />
+      <DataTable table={table} onRowClicked={onRowClicked}/>
     </div>
   )
 }

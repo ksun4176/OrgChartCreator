@@ -3,7 +3,8 @@ import { MemberList } from "./member-list";
 import { Separator } from "@/components/ui/separator";
 import { TeamList } from "./team-list";
 import { Button } from "@/components/ui/button";
-import { Pencil } from "lucide-react";
+import Link from "next/link";
+import { EditTeamButton } from "./edit-team-button";
 
 interface TeamPageProps {
   params: Promise<{ teamId: number }>
@@ -11,33 +12,41 @@ interface TeamPageProps {
 export default async function TeamPage(props: TeamPageProps) {
   const { teamId } = await props.params;
   const team = (await getTeam(teamId)).data;
-  
   return (
-    <div className="grid grid-rows-[60px_1fr_20px] min-h-screen px-8 pb-20 sm:px-20 font-[family-name:var(--font-geist-sans)]">
-      <header className="row-start-1 flex flex-wrap items-center">
-        <h1 className="text-2xl font-semibold">{team.name}</h1>
-        <Button variant="ghost" size="icon">
-          <Pencil />
-        </Button>
-        <Separator />
-      </header>
-      <main className="row-start-2 flex flex-col gap-8">
-        <div className="flex">
-          <div className="flex-1">
-            <MemberList members={team.members} />
+    <div className="px-8 pb-20 sm:px-20 font-[family-name:var(--font-geist-sans)]">
+      <main className="row-start-1 flex flex-col">
+        <div className="flex flex-col gap-2">
+          <div className="flex items-center">
+            <h1 className="text-2xl font-semibold">{team.name}</h1>
+            <EditTeamButton team={team} />
           </div>
-          <Separator orientation="vertical" className="mx-2" />
-          <div className="flex-1">
+          <div>{`Type: ${team.type.name}`}</div>
+
+          <div>
+            {`Belongs To: `}
+            {team.parent ? 
+              <Button variant="link" className="text-link p-0 h-auto text-base">
+                <Link href={`/teams/${team.parent.id}`}>{team.parent.name}</Link> 
+              </Button>
+              : `None`
+            }
+          </div>
+        </div>
+        <Separator className="my-2 pt-1"/>
+        <div className="grid grid-cols-[1fr_8_1fr] gap-2">
+          <div>
+            <MemberList team={team} />
+          </div>
+          <Separator orientation="vertical" className="pl-1" />
+          <div>
             <TeamList teams={team.children} />
           </div>
         </div>
         <div>
           <h2 className="text-xl">Report</h2>
-          <div className="border-1 border-solid flex items-center justify-center text-lg min-h-160">{`Some Reports About ${team.name}`}</div>
+          <div className="border-4 border-solid flex items-center justify-center text-lg min-h-160">{`Some Reports About ${team.name}`}</div>
         </div>
       </main>
-      <footer className="row-start-3 flex flex-wrap items-center justify-center">
-      </footer>
     </div>
   )
 }

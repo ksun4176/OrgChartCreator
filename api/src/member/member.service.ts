@@ -4,12 +4,15 @@ import { UpdateMemberDto } from './dto/update-member.dto';
 import { Member } from './entities/member.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOptionsWhere, QueryFailedError, Repository } from 'typeorm';
+import { MemberRole } from './entities/memberrole.entity';
 
 @Injectable()
 export class MemberService {
   constructor(
     @InjectRepository(Member)
     private memberRepository: Repository<Member>,
+    @InjectRepository(MemberRole)
+    private memberRoleRepository: Repository<MemberRole>,
   ) {}
 
   /**
@@ -25,8 +28,7 @@ export class MemberService {
     });
     try {
       return await this.memberRepository.save(newMember);
-    }
-    catch (error) {
+    } catch (error) {
       const queryError = error as QueryFailedError;
       if (queryError.message.match(/duplicate key value.*email/)) {
         throw new ConflictException('Email already in use');
@@ -91,5 +93,13 @@ export class MemberService {
    */
   async remove(id: number) {
     return this.memberRepository.delete({ id });
+  }
+
+  /**
+   * Find member roles
+   * @returns A list of member roles
+   */
+  findAllRoles() {
+    return this.memberRoleRepository.find();
   }
 }

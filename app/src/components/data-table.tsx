@@ -6,9 +6,10 @@ import { Table as TanStackTable } from "@tanstack/table-core"
  */
 interface DataTableProps<TData> {
   table: TanStackTable<TData>
+  onRowClicked?: (rowId: string) => void;
 }
 export function DataTable<TData>(props: DataTableProps<TData>) {
-  const { table } = props;
+  const { table, onRowClicked } = props;
 
   return (
     <div className="rounded-md border">
@@ -46,6 +47,7 @@ export function DataTable<TData>(props: DataTableProps<TData>) {
                 key={row.id}
                 data-state={row.getIsSelected() && "selected"}
                 onPointerDown={() => {
+                  if (onRowClicked) onRowClicked(row.id);
                 }}
               >
                 {row.getVisibleCells().map((cell) => (

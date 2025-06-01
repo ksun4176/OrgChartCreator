@@ -23,7 +23,7 @@ export class Team {
 
   @ManyToOne(() => Team, (team) => team.id)
   @JoinColumn({ name: 'parent_team_id' })
-  parent: Team;
+  parent: Team | null;
 
   @OneToMany(() => Team, (team) => team.parent)
   @JoinColumn({ name: 'parent_team_id' })

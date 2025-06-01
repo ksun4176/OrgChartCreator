@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TeamModule } from './team/team.module';
-import { MemberRole } from './member/entities/memberrole.entity';
 import { MemberModule } from './member/member.module';
 
 @Module({
@@ -13,7 +12,7 @@ import { MemberModule } from './member/member.module';
       password: 'postgres',
       username: 'postgres',
       database: 'postgres',
-      entities: [MemberRole],
+      entities: [],
       autoLoadEntities: true,
     }),
     TeamModule,
