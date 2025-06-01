@@ -24,10 +24,12 @@ export function MemberList(props: MemberListProps) {
         {team.members.map((member, index) => (
           <div key={member.id} className="flex flex-col gap-2">
             <div className="flex gap-4 items-center">
-              <Button variant="link" className="text-link font-semibold p-0 h-auto text-base">
-                <Link href={`/members/${member.member.id}`}>{member.member.firstName} {member.member.lastName}</Link> 
-              </Button>
-              <div className="flex-1">{member.role.name}</div>
+              <div className="flex-1 flex gap-2">
+                <Button variant="link" className="text-link font-semibold p-0 h-auto text-base">
+                  <Link href={`/members/${member.member.id}`}>{member.member.firstName} {member.member.lastName}</Link> 
+                </Button>
+                {member.role.name}
+              </div>
               <UpdateAssignmentButton assignment={member} />
               <RemoveAssignmentButton assignment={member} />
             </div>

@@ -20,10 +20,11 @@ export function TeamList(props: TeamListProps) {
         {assignments.map((assignment, index) => (
           <div key={assignment.id} className="flex flex-col gap-2">
             <div className="flex gap-4 items-center">
-              <div className="flex-1">
+              <div className="flex-1 flex gap-2">
                 <Button variant="link" className="text-link font-semibold p-0 h-auto text-base">
                   <Link href={`/teams/${assignment.team.id}`}>{assignment.team.name}</Link> 
                 </Button>
+                {assignment.role.name}
               </div>
               <RemoveAssignmentButton assignment={assignment} />
             </div>
