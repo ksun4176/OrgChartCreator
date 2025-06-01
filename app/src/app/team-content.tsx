@@ -7,8 +7,9 @@ import { DataTable } from "@/components/data-table";
 import { TeamTableButton } from "./team-table-button";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { TeamTree } from "./team-tree";
 
-export function TeamTable() {
+export function TeamContent() {
   const [numAdded, setNumAdded] = useState(0);
   const { teams, teamsLoading } = useFetchTeams(numAdded);
   const router = useRouter();
@@ -28,12 +29,17 @@ export function TeamTable() {
   }
 
   return (
-    <div className="flex flex-col gap-1">
-      <div className="flex">
-        <div className="flex-1" />
-        <TeamTableButton teams={teams} setNumAdded={setNumAdded} />
+    <div>
+      <div>
+        <TeamTree teams={teams} />
       </div>
-      <DataTable table={table} onRowClicked={onRowClicked} />
+      <div className="flex flex-col gap-1">
+        <div className="flex">
+          <div className="flex-1" />
+          <TeamTableButton teams={teams} setNumAdded={setNumAdded} />
+        </div>
+        <DataTable table={table} onRowClicked={onRowClicked} />
+      </div>
     </div>
   )
 }

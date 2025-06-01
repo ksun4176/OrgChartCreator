@@ -6,10 +6,12 @@ Manage an organization's hierarchy structure
 
 You can:
 1. View all teams in the system
+  - Teams can be seen in a hierarchical tree format
+  - Teams are also in a table format to get overview
 2. View all members in the system
 3. Add a new team to system
 4. Add a new member to system
-5. Navigate to existing teams and members by clicking the row
+5. Navigate to existing teams/members by clicking a row in the tables
 
 **`/teams/:teamId`**
 

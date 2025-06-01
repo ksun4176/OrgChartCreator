@@ -1,6 +1,6 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { MemberTable } from "./member-table";
-import { TeamTable } from "./team-table";
+import { TeamContent } from "./team-content";
 
 enum HomeTabs {
   Teams = 'teams',
@@ -17,7 +17,7 @@ export default function Home() {
             <TabsTrigger value={HomeTabs.Members}>Members</TabsTrigger>
           </TabsList>
           <TabsContent value={HomeTabs.Teams}>
-            <TeamTable />
+            <TeamContent />
           </TabsContent>
           <TabsContent value={HomeTabs.Members}>
             <MemberTable />

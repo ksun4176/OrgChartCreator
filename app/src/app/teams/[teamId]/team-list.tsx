@@ -14,7 +14,7 @@ export function TeamList(props: TeamListProps) {
   return (
     <div className="flex flex-col gap-4">
       <div className="flex items-center h-8">
-        <h2 className="text-xl">Teams</h2>
+        <h2 className="text-xl">Subteams</h2>
       </div>
       <div className="flex flex-col gap-2">
         {teams.map((team, index) => (
