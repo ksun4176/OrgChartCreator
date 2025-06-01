@@ -3,8 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { X } from "lucide-react";
 import { Team } from "@/lib/types";
-import { useRouter } from "next/navigation";
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { useState } from "react";
 import { updateTeam } from "@/lib/apis";
 
@@ -13,7 +12,6 @@ interface RemoveTeamButtonProps {
 }
 export function RemoveTeamButton(props: RemoveTeamButtonProps) {
   const { team } = props;
-  const router = useRouter()
   const [open, setOpen] = useState(false);
 
   async function onConfirm() {
@@ -21,7 +19,7 @@ export function RemoveTeamButton(props: RemoveTeamButtonProps) {
       parent: null
     });
     if (response.success) {
-      router.refresh();
+      window.location.reload();
     }
   }
 

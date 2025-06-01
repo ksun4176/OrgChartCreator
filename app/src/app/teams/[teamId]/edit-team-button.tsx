@@ -14,7 +14,6 @@ import { z } from "zod"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { useState } from "react";
 import { useFetchTeams } from "@/lib/hooks/useFetchTeams";
-import { useRouter } from "next/navigation";
 
 const teamSchema = z.object({
   name: z.string().min(1, { message: 'Select a name for your team' }),
@@ -29,9 +28,7 @@ export function EditTeamButton(props: EditTeamButtonProps) {
   const { team } = props;
   const { teamTypes } = useFetchTeamTypes();
   const { teams } = useFetchTeams();
-  const [open, setOpen] = useState(false);
   const [error, setError] = useState('');
-  const router = useRouter();
 
   const form = useForm<z.infer<typeof teamSchema>>({
     resolver: zodResolver(teamSchema),
@@ -54,8 +51,7 @@ export function EditTeamButton(props: EditTeamButtonProps) {
     });
     let errorMessage = '';
     if (response.success) {
-      router.refresh();
-      setOpen(false);
+      window.location.reload();
     }
     else {
       errorMessage = response.message ?? 'Could not edit team. Try again later.';
@@ -64,7 +60,7 @@ export function EditTeamButton(props: EditTeamButtonProps) {
   }
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog>
       <DialogTrigger asChild>
         <Button variant="ghost" size="icon" className="size-8">
           <Pencil />

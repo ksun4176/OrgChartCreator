@@ -13,7 +13,6 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { useState } from "react";
 import { useFetchMemberRoles } from "@/lib/hooks/useFetchMemberRoles";
 import { useFetchMembers } from "@/lib/hooks/useFetchMembers";
-import { useRouter } from "next/navigation";
 
 const assignmentSchema = z.object({
   member: z.number({ required_error: 'Select a member to add to your team' }),
@@ -27,9 +26,7 @@ export function AddMemberButton(props: AddMemberButtonProps) {
   const { team } = props;
   const { memberRoles } = useFetchMemberRoles();
   const { members } = useFetchMembers();
-  const [open, setOpen] = useState(false);
   const [error, setError] = useState('');
-  const router = useRouter();
 
   const form = useForm<z.infer<typeof assignmentSchema>>({
     resolver: zodResolver(assignmentSchema),
@@ -39,8 +36,7 @@ export function AddMemberButton(props: AddMemberButtonProps) {
     const response = await assignMember(team.id, values);
     let errorMessage = '';
     if (response.success) {
-      router.refresh();
-      setOpen(false);
+      window.location.reload();
     }
     else {
       errorMessage = response.message ?? 'Could not assign member. Try again later.';
@@ -49,7 +45,7 @@ export function AddMemberButton(props: AddMemberButtonProps) {
   }
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog>
       <DialogTrigger asChild>
         <Button variant="ghost" size="icon" className="size-8">
           <Plus color="green" />
