@@ -19,7 +19,7 @@ You can:
    - Subteams
    - Team performance reports
 2. Edit team info
-3. Add/remove members from team
+3. Add/remove members from team (Members must already exist in system)
 4. Remove subteams
 
 **`/members/:memberId`**
