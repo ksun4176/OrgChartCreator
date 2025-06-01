@@ -118,7 +118,6 @@ export const updateTeam = (teamId: number, team: Partial<PostTeamsObj>): Promise
       success: false,
     }
   });
-  
 
 /**
  * Update a member
@@ -131,6 +130,28 @@ export const updateMember = (memberId: number, member: Partial<PostMembersObj>):
     return {
       success: true,
       message: 'Member updated.'
+    }
+  })
+  .catch(() => {
+    return {
+      success: false,
+    }
+  });
+
+/**
+ * Update a member's role in a team
+ * @param teamId team to update
+ * @param memberId Member to update
+ * @param roleId Role to update
+ * @returns Success or failure
+ */
+export const updateAssignment = (teamId: number, memberId: number, roleId: number): Promise<ApiResponse> => axios.patch(`${apiUrl}/teams/${teamId}/members/${memberId}`,
+  { role: roleId }
+)
+  .then(() => {
+    return {
+      success: true,
+      message: 'Assignment updated.'
     }
   })
   .catch(() => {

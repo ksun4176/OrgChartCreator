@@ -6,6 +6,7 @@ import { AddMemberButton } from "./add-member-button";
 import { RemoveAssignmentButton } from "../../../components/remove-assignment-button";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { UpdateAssignmentButton } from "./update-assignment-button";
 
 interface MemberListProps {
   team: Team;
@@ -27,6 +28,7 @@ export function MemberList(props: MemberListProps) {
                 <Link href={`/members/${member.member.id}`}>{member.member.firstName} {member.member.lastName}</Link> 
               </Button>
               <div className="flex-1">{member.role.name}</div>
+              <UpdateAssignmentButton assignment={member} />
               <RemoveAssignmentButton assignment={member} />
             </div>
             {index < team.members.length - 1 && <Separator className="pt-1" />}
